@@ -43,14 +43,13 @@ import { FeatureFlagComponent } from 'uiSrc/components'
 
 import { appContextSelector } from 'uiSrc/slices/app/context'
 import { AppWorkspace } from 'uiSrc/slices/interfaces'
+import CreateCloud from './components/create-cloud'
 import HelpMenu from './components/help-menu/HelpMenu'
 import NotificationMenu from './components/notifications-center'
 
 import { RedisLogo } from './components/redis-logo/RedisLogo'
 import styles from './styles.module.scss'
 
-const workbenchPath = `/${PageNames.workbench}`
-const browserPath = `/${PageNames.browser}`
 const pubSubPath = `/${PageNames.pubSub}`
 
 interface INavigations {
@@ -111,7 +110,7 @@ const NavigationMenu = () => {
     {
       tooltipText: 'Browser',
       pageName: PageNames.browser,
-      isActivePage: activePage === browserPath,
+      isActivePage: activePage === `/${PageNames.browser}`,
       ariaLabel: 'Browser page button',
       onClick: () => handleGoPage(Pages.browser(connectedInstanceId)),
       dataTestId: 'browser-page-btn',
@@ -131,7 +130,7 @@ const NavigationMenu = () => {
       onClick: () => handleGoPage(Pages.workbench(connectedInstanceId)),
       dataTestId: 'workbench-page-btn',
       connectedInstanceId,
-      isActivePage: activePage === workbenchPath,
+      isActivePage: activePage === `/${PageNames.workbench}`,
       getClassName() {
         return cx(styles.navigationButton, { [styles.active]: this.isActivePage })
       },
@@ -311,6 +310,7 @@ const NavigationMenu = () => {
       </div>
       <div className={styles.bottomContainer}>
         <FeatureFlagComponent name={FeatureFlags.disabledByEnv} enabledByDefault>
+          <CreateCloud />
           <NotificationMenu />
         </FeatureFlagComponent>
         <HelpMenu />
