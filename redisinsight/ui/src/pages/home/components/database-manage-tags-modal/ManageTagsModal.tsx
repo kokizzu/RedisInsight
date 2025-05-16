@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux'
 import {
   EuiButton,
   EuiIcon,
-  EuiSpacer,
   EuiTitle,
   EuiText,
   EuiButtonEmpty,
@@ -16,6 +15,7 @@ import WarningIcon from 'uiSrc/assets/img/warning.svg?react'
 import { updateInstanceAction } from 'uiSrc/slices/instances/instances'
 import { addMessageNotification } from 'uiSrc/slices/app/notifications'
 import successMessages from 'uiSrc/components/notifications/success-messages'
+import { Spacer } from 'uiSrc/components/base/layout/spacer'
 import { VALID_TAG_KEY_REGEX, VALID_TAG_VALUE_REGEX } from './constants'
 import { TagInputField } from './TagInputField'
 import { getInvalidTagErrors } from './utils'
@@ -64,6 +64,7 @@ export const ManageTagsModal = ({
 
   const isSaveButtonDisabled = !isModified || hasErrors
   const isCloudDb = instance.provider === ConnectionProvider.RE_CLOUD
+  const isClusterDb = instance.provider === ConnectionProvider.RE_CLUSTER
 
   const handleTagChange = useCallback(
     (index: number, key: 'key' | 'value', value: string) => {
@@ -107,7 +108,7 @@ export const ManageTagsModal = ({
           <EuiTitle size="s">
             <h4>Manage tags for {instance.name}</h4>
           </EuiTitle>
-          <EuiSpacer size="s" />
+          <Spacer size="s" />
           <EuiText size="s" color="subdued">
             <p>
               Tags are key-value pairs that let you categorize your databases.
@@ -117,12 +118,12 @@ export const ManageTagsModal = ({
       }
       footer={
         <>
-          {isCloudDb && (
+          {(isCloudDb || isClusterDb) && (
             <div className={styles.warning}>
               <EuiIcon type={WarningIcon} color="warning" size="m" />
               <EuiText size="m">
                 Tag changes in Redis Insight apply locally and are not synced
-                with Redis Cloud.
+                with Redis {isCloudDb ? 'Cloud' : 'Software'}.
               </EuiText>
             </div>
           )}
@@ -152,7 +153,7 @@ export const ManageTagsModal = ({
         </div>
         <div className={styles.tagFormBody}>
           {tags.map((tag, index) => {
-            const [keyError, valueError] = getInvalidTagErrors(tags, index)
+            const { keyError, valueError } = getInvalidTagErrors(tags, index)
 
             return (
               <div key={`tag-row-${index}`} className={styles.tagFormRow}>
@@ -188,7 +189,7 @@ export const ManageTagsModal = ({
           })}
         </div>
       </div>
-      <EuiSpacer size="s" />
+      <Spacer size="s" />
       <EuiButtonEmpty
         iconType="plus"
         onClick={handleAddTag}
