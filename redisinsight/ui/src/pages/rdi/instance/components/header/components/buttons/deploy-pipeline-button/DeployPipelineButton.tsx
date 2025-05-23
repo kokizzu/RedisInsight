@@ -1,12 +1,8 @@
 import {
   EuiButton,
   EuiCheckbox,
-  EuiFlexGroup,
-  EuiFlexItem,
   EuiIcon,
-  EuiOutsideClickDetector,
   EuiPopover,
-  EuiSpacer,
   EuiText,
   EuiTitle,
   EuiToolTip,
@@ -28,6 +24,9 @@ import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/telemetry'
 import { createAxiosError, pipelineToJson } from 'uiSrc/utils'
 import { addErrorNotification } from 'uiSrc/slices/app/notifications'
 import { rdiErrorMessages } from 'uiSrc/pages/rdi/constants'
+import { FlexItem, Row } from 'uiSrc/components/base/layout/flex'
+import { Spacer } from 'uiSrc/components/base/layout/spacer'
+import { OutsideClickDetector } from 'uiSrc/components/base/utils'
 import styles from './styles.module.scss'
 
 export interface Props {
@@ -104,7 +103,7 @@ const DeployPipelineButton = ({ loading, disabled, onReset }: Props) => {
   }
 
   return (
-    <EuiOutsideClickDetector onOutsideClick={handleClosePopover}>
+    <OutsideClickDetector onOutsideClick={handleClosePopover}>
       <EuiPopover
         closePopover={handleClosePopover}
         ownFocus
@@ -136,17 +135,17 @@ const DeployPipelineButton = ({ loading, disabled, onReset }: Props) => {
         <EuiTitle size="xxs">
           <span>Are you sure you want to deploy the pipeline?</span>
         </EuiTitle>
-        <EuiSpacer size="s" />
+        <Spacer size="s" />
         <EuiText size="s">
           When deployed, this local configuration will overwrite any existing
           pipeline.
         </EuiText>
-        <EuiSpacer size="s" />
+        <Spacer size="s" />
         <EuiText size="s">
           After deployment, consider flushing the target Redis database and
           resetting the pipeline to ensure that all data is reprocessed.
         </EuiText>
-        <EuiSpacer size="s" />
+        <Spacer size="s" />
         <div className={styles.checkbox}>
           <EuiCheckbox
             id="resetPipeline"
@@ -169,8 +168,8 @@ const DeployPipelineButton = ({ loading, disabled, onReset }: Props) => {
             />
           </EuiToolTip>
         </div>
-        <EuiFlexGroup justifyContent="flexEnd">
-          <EuiFlexItem grow={false}>
+        <Row gap="m" responsive justify="end">
+          <FlexItem>
             <EuiButton
               fill
               size="s"
@@ -181,10 +180,10 @@ const DeployPipelineButton = ({ loading, disabled, onReset }: Props) => {
             >
               Deploy
             </EuiButton>
-          </EuiFlexItem>
-        </EuiFlexGroup>
+          </FlexItem>
+        </Row>
       </EuiPopover>
-    </EuiOutsideClickDetector>
+    </OutsideClickDetector>
   )
 }
 
